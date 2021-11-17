@@ -11,10 +11,7 @@ VALID_MARKUPS = ["initial", "lang:English", "lang:French", "lang:Foreign", "lang
                  "url", "address", "date_time", "other", "bank_routing", "bank_account_number",
                  "credit_debit_number", "credit_debit_expiry", "credit_debit_cvv"]
 
-VALID_ITEMS = {"organization": ["Easy Breathe", "Easy", "Breathe", "Easy Breathe Inc", "E Breathe", "Easy Breathe's",
-                                    "E A S Y B R E A T H E", "E A S Y", "B R E A T H E"]}
-
-COMMON_ERRORS = ["(()) (())", " uh ", " um ", " Uh ", " Um ", "Uhm",
+COMMON_ERRORS = ["(()) (())", "(())(())", " uh ", " um ", " Uh ", " Um ", "Uhm",
                  "dream station", "air fit", "air sense", "air mini",
                  "Dream Station", "Air Fit", "Air Sense", "Air Mini"]
 

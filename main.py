@@ -11,7 +11,7 @@ def find_errors():
 
     wrong_segments.extend(transcriber.check_characters())
     wrong_segments.extend(transcriber.check_for_common_errors())
-    wrong_segments.extend(transcriber.check_initialisms())
+    #wrong_segments.extend(transcriber.check_initialisms())
     wrong_segments.extend(transcriber.check_overlaps())
 
     new_tags = ["organization", "name_first", "name_last", "phone", "email", "url", "address",
@@ -19,11 +19,6 @@ def find_errors():
 
     for tag in new_tags:
         wrong_segments.extend(transcriber.check_new_tag(tag, True))
-
-    agent_names = ["Parvinder", "Gershom", "Joanne", "Caprice", "Amanda", "Freddy", "Freddie",
-                   "Kevin", "Blaise", "Rachel", "Ian"]
-    for name in agent_names:
-        wrong_segments.extend(transcriber.check_for_string(name, ["<name_first>", "<email>", "<address>"]))
 
     wrong_segments.extend(transcriber.check_name_tags())
 

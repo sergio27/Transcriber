@@ -2,7 +2,7 @@ import re
 
 from error import Error
 
-from constants import VALID_TAGS, VALID_MARKUPS, VALID_ITEMS, VALID_FILLER_WORDS
+from constants import VALID_TAGS, VALID_MARKUPS, VALID_FILLER_WORDS
 from constants import INVALID_CHARACTERS, COMMON_ERRORS, NOT_INITIALISMS
 
 working_files = []
@@ -36,7 +36,7 @@ def check_characters():
 
             for character in INVALID_CHARACTERS:
                 if character in text and (filename, segment) not in wrong_segments:
-                    wrong_segments.append(Error(filename, "Character", f"({character})", segment))
+                    wrong_segments.append(Error(filename, "Character", character, segment))
 
     return wrong_segments
 
@@ -84,7 +84,7 @@ def check_initialisms():
                         initialisms.append(word)
 
                     if f"<initial>{word}</initial>" not in text and "~" not in word and word not in NOT_INITIALISMS:
-                        wrong_segments.append(Error(filename, "Initialism", f"({word})", segment))
+                        wrong_segments.append(Error(filename, "Initialism", word, segment))
 
     return wrong_segments
 
@@ -119,9 +119,7 @@ def check_new_tag(new_tag, detail=False):
                 match_segments.append((filename, segment))
 
                 if len(name) > 0 and (name[0] == " " or name[-1] == " "):
-                    wrong_segments.append(Error(filename, f"Remove space", f"({name})", segment))
-                elif new_tag in VALID_ITEMS and name not in VALID_ITEMS[new_tag] and "<" not in name:
-                    wrong_segments.append(Error(filename, f"Tag [{new_tag}]", f"({name})", segment))
+                    wrong_segments.append(Error(filename, f"Remove space", name, segment))
 
     if detail:
         return wrong_segments
@@ -145,7 +143,7 @@ def check_name_tags():
                 if result is None:
                     continue
 
-                name = result.group(1).strip("?.,").replace(",", "")
+                name = result.group(1).strip("?.,").replace(",", "").replace("[no-speech]", "").replace("(())", "")
 
                 words = name.split()
 
@@ -155,7 +153,7 @@ def check_name_tags():
                         complete_words += 1
 
                 if len(words) > 2 and complete_words == 1:
-                    wrong_segments.append(Error(filename, f"Check tag", f"({name})", segment))
+                    wrong_segments.append(Error(filename, f"Check tag", name, segment))
 
     return wrong_segments
 
@@ -172,7 +170,7 @@ def check_for_common_errors():
 
             for error in COMMON_ERRORS:
                 if error in text:
-                    wrong_segments.append(Error(filename, "Incorrect spelling", f"({error.strip()})", segment))
+                    wrong_segments.append(Error(filename, "Incorrect spelling", error.strip(), segment))
 
     return wrong_segments
 
@@ -190,7 +188,7 @@ def check_for_string(string, exceptions=[]):
             exception_found = len([exception for exception in exceptions if exception in text]) > 0
 
             if string in text.split(" ") and not exception_found:
-                wrong_segments.append(Error(filename, "String", f"({string})", segment))
+                wrong_segments.append(Error(filename, "String", string, segment))
 
     return wrong_segments
 
